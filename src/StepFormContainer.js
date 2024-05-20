@@ -1,40 +1,41 @@
 import React, { useState } from 'react';
 import { Formik, Form } from 'formik';
-import * as Yup from 'yup';
-// Define form configurations with specific props
 
-
-const MultiStepForm = ({ formConfigs }) => {
+const MultiStepForm = ({ formConfigs, onSubmitFinal }) => {
     const [step, setStep] = useState(0);  // Current form step
+    const isLastStep = step === formConfigs.length - 1;
+
     const currentConfig = formConfigs[step];
+    const CurrentForm = currentConfig.Component;
 
-    // Combined initial values from all forms
-    const combinedInitialValues = formConfigs.reduce((acc, current) => ({
-        ...acc,
-        ...current.initialValues
-    }), {});
-
-    const handleSubmit = (values) => {
-        if (step < formConfigs.length - 1) {
-            setStep(step + 1);  // Move to next form segment
+    const handleNext = async (values, actions) => {
+        if (!isLastStep) {
+            const errors = await actions.validateForm();
+            if (Object.keys(errors).length === 0) {
+                setStep(step + 1);
+            } else {
+                actions.setTouched(errors);
+            }
         } else {
-            console.log('Final submission:', values);
-            // Handle final submission here
+            await onSubmitFinal(values); // Final submission handler
+        }
+    };
+
+    const handleBack = () => {
+        if (step > 0) {
+            setStep(step - 1);
         }
     };
 
     return (
         <Formik
-            initialValues={combinedInitialValues}
+            initialValues={currentConfig.initialValues}
             validationSchema={currentConfig.validationSchema}
-            onSubmit={handleSubmit}
+            onSubmit={handleNext}
         >
             {formikProps => (
                 <Form>
-                    {/* Spread both Formik props and specific props */}
-                    <currentConfig.Component {...formikProps} {...currentConfig.specificProps} />
-                    <button type="button" onClick={() => setStep(step - 1)} disabled={step === 0}>Back</button>
-                    <button type="submit">{step === formConfigs.length - 1 ? 'Submit' : 'Next'}</button>
+                    <CurrentForm {...formikProps} onNext={() => formikProps.submitForm()} type={currentConfig.type} onBack={handleBack} isLastStep={isLastStep} step={step} />
                 </Form>
             )}
         </Formik>

@@ -1,3 +1,5 @@
+import { Button } from "@mui/material";
+
 const eighteenYearsAgo = new Date();
 eighteenYearsAgo.setFullYear(eighteenYearsAgo.getFullYear() - 18);
 
@@ -9,3 +11,17 @@ export const validateFile = (file, maxSize) => {
     return file.size <= sizeInBytes && ['image/jpeg', 'image/png', 'image/gif'].includes(file.type);
 };
 
+export const nextBtnText = (isLast) => {
+    if(isLast) return 'Confirm'
+    else return 'Next'
+}
+
+export const renderBackButton = ({ onBack, step }) => {
+    if (window.innerWidth >= 600 && step > 0){
+        return (
+            <Button type="button" color="secondary" variant="contained" sx={{ width: 94 }} onClick={onBack}>
+                Back
+            </Button> 
+        )
+    }else return <></>
+}
