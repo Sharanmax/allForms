@@ -32,3 +32,25 @@ export const renderBackButton = ( onBack, step ) => {
         )
     }else return <></>
 }
+
+
+export const createTimer = (duration, onUpdate) => {
+    let seconds = duration;
+    const intervalId = setInterval(() => {
+        seconds -= 1;
+        onUpdate(seconds);  // Call the onUpdate function with the current time
+
+        if (seconds <= 0) {
+            clearInterval(intervalId);
+            onUpdate(0);  // Optionally notify that the timer has ended
+        }
+    }, 1000);
+
+    return {
+        getCurrentTime: () => seconds,
+        stop: () => {
+            clearInterval(intervalId);
+            console.log('Timer stopped manually with', seconds, 'seconds remaining.');
+        }
+    };
+}

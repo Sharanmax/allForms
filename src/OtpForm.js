@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import OtpInput from 'react-otp-input';
 import * as Yup from 'yup';
 import { Box, Button, Typography, FormHelperText } from '@mui/material';
+import { createTimer } from './utilities';
 
 const validationSchema = Yup.object({
     otp: Yup.string()
@@ -11,11 +12,19 @@ const validationSchema = Yup.object({
         .length(4, 'OTP must be exactly 4 digits')
 });
 
-const VerifyOTP = ({subHeader}) => {
+const VerifyOTP = ({subHeader, onBack, callBack}) => {
+    const [timeLeft, setTimeLeft] = useState(10)
+
+    useEffect(() => {
+        const timer = createTimer(10,(val) => setTimeLeft(val));
+
+        return () => timer.stop();  // Cleanup function to stop the timer on unmount
+    }, []);
+
     return (
         <Box 
             sx={{
-                width: 300,
+                width: 400,
                 margin: 'auto',
                 padding: 2,
                 textAlign: 'center',
@@ -68,16 +77,33 @@ const VerifyOTP = ({subHeader}) => {
                                     {touched.otp && errors.otp && (
                                         <FormHelperText sx={{ color: 'error.main', textAlign: 'right' }}>{errors.otp}</FormHelperText>
                                     )}
+                                        <Button disabled={timeLeft > 0} onClick={() => console.log("check for callback")} sx={{
+                                            textTransform: 'none', // Prevent uppercase
+                                            width: '100%',         // Ensure the button occupies the required width
+                                            justifyContent: 'flex-end' // Aligns content to the right within the button
+                                        }}>
+                                            <Typography
+                                                sx={{
+                                                    textAlign: 'right', // Ensures text is right-aligned
+                                                    fontSize: '10px',   // Sets font size
+                                                    display: 'flex',    // Uses flexbox for internal alignment
+                                                    alignItems: 'center' // Centers items vertically within the flex container
+                                                }}
+                                            >
+                                                Resend OTP in {timeLeft} sec
+                                            </Typography>
+
+                                        </Button>
                                 </Box>
                             )}
                         </Field>
-                        <Button type="submit" color='primary' variant='contained' disabled={isSubmitting} sx={{ mt: "96px"}}>
+                        <Button type="submit" color='primary' variant='contained' disabled={isSubmitting} sx={{ width: '100%', alignSelf: 'center', height: '48px', mt: '96px', mb: '16px' }}>
                             Verify
                         </Button>
                     </Form>
                 )}
             </Formik>
-            <Button onClick={() => console.log('Resend OTP logic here')}>Back</Button>
+            <Button onClick={onBack}>Back</Button>
         </Box>
     );
 };

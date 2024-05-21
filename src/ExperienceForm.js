@@ -24,7 +24,25 @@ const positionOptions = [
     { value: 'hrConsultant', label: 'HR Consultant' }
 ];
 
+
+
 const WorkExperienceForm = ({ onBack, isLastStep, type, step, ...formikProps }) => {
+
+    const renderSelect = (department) => {
+        if (department === 'marketing') {
+            return (
+                <MaterialUIFieldAdapter
+                    type="select"
+                    options={[{ value: 'New York', label: 'New York' }, { value: 'Los Angeles', label: 'Los Angeles' }]}
+                    name="subCategory"
+                    label="Sub Category"
+                    placeholder="Select"
+                    {...formikProps}
+                />
+            )
+        } else return <></>
+    }
+
     return (
                 <Form {...formikProps}>
                     <Box sx={{
@@ -65,6 +83,7 @@ const WorkExperienceForm = ({ onBack, isLastStep, type, step, ...formikProps }) 
                             label="Department"
                             options={departmentOptions}
                         />
+                        {formikProps.values.department && renderSelect(formikProps.values.department)}
                         <MaterialUIFieldAdapter
                             {...formikProps}
                             type="select"

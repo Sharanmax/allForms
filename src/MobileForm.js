@@ -24,34 +24,37 @@ const resFontStyle = {
     },
 }
 
-const MobileNumberForm = ({ header, subHeader, btnText, footerText}) => (
+const MobileNumberForm = ({ header, subHeader, btnText, footerText, callback}) => (
     <Formik
         initialValues={{
             mobileNumber: ''
         }}
         validationSchema={validationSchema}
         onSubmit={(values, { setSubmitting, resetForm }) => {
-            alert(`OTP requested for: ${values.mobileNumber}`);
+            callback();
+            alert(`OTP sent`);
             setSubmitting(false);
             resetForm();
         }}
     >
         {() => (
             <Form>
-                <Box sx={{ maxWidth: 400, mx: "auto", px: 3, display: 'flex', flexDirection: 'column', justifyContent: 'center', textAlign: 'center' }}>
+                <Box sx={{ maxWidth: 400, mx: "auto", px: '16px', display: 'flex', flexDirection: 'column', justifyContent: 'center', textAlign: 'center' }}>
                     <Typography variant="h4" sx={{ mt: 2, mb: 2 }} style={resFontStyle}>
                         {header || "Enter Mobile Number"}
                     </Typography>
                     <Typography variant="body2" sx={{ mb: 2 }}>
                         {subHeader || 'We will send you a Confirmation Code'}
                     </Typography>
-                    <MaterialUIFieldAdapter
-                        name="mobileNumber"
-                        type="text"
-                        label="Mobile Number"
-                        placeholder="Type Mobile Number"
-                    />
-                    <Button type="submit" variant="contained" sx={{ mt: 2, mb: 2 }} style={{width: 328, alignSelf: 'center', height: '48px'}}>
+                    <Box>
+                        <MaterialUIFieldAdapter
+                            name="mobileNumber"
+                            type="text"
+                            label="Mobile Number"
+                            placeholder="Type Mobile Number"
+                        />
+                    </Box>
+                    <Button type="submit" variant="contained"  sx={{width: '100%', alignSelf: 'center', height: '48px', mt: '64px', mb: '16px'}}>
                         {btnText || 'Get OTP'}
                     </Button>
                     <Typography variant="caption" display="block" align="center" fontSize={10} fontWeight={400}>
@@ -70,7 +73,8 @@ MobileNumberForm.propTypes = {
     header: PropTypes.string,
     subHeader: PropTypes.string,
     footerText: PropTypes.string,
-    btnText: PropTypes.string
+    btnText: PropTypes.string,
+    callback: PropTypes.func,
 }
 
 export default MobileNumberForm;

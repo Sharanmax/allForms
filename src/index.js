@@ -3,13 +3,13 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import SupplierForm from './SupplierFlow';
-import ExperiencedForm from './ExperiencedFlow';
+import MobileNumberForm from './MobileForm';
+import OtpRegistrationFlow from './MobileOtpFlow'
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <ExperiencedForm />
+    <OtpRegistrationFlow />
   </React.StrictMode>
 );
 
