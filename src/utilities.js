@@ -19,9 +19,14 @@ export const nextBtnText = (isLast) => {
 }
 
 export const renderBackButton = ( onBack, step ) => {
-    if (window.innerWidth >= 600 && step > 0){
+    if (step > 0){
         return (
-            <Button type="button" color="secondary" variant="contained" sx={{ width: 94 }} onClick={onBack}>
+            <Button type="button" color="secondary" variant="contained" sx={{
+                width: { sm: '19%' }, // Applies width starting from the sm breakpoint
+                display: {
+                    xs: 'none', // Hides the button on extra small screens (below 600px)
+                    sm: 'block' // Displays the button on screens 600px and wider
+                } }} onClick={onBack}>
                 Back
             </Button> 
         )

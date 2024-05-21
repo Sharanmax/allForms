@@ -49,7 +49,12 @@ const StatusForm = ({ onBack, isLastStep, type, step, ...formikProps }) => {
                             ]}
                         />
                         <Box display="flex" justifyContent="space-between" width="100%" fullWidth>
-                            <Button type="submit" color="primary" variant="contained" sx={{ width: window.innerWidth >= 600 ? '444px' : "100%" }}>
+                    <Button type="submit" color="primary" variant="contained" sx={{
+                            width: {
+                                xs: '100%',
+                                sm: '79%'
+                            } 
+                        }}>
                                 {nextBtnText(isLastStep)}
                             </Button>
                             {renderBackButton(onBack, step)}

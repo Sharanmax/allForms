@@ -3,8 +3,8 @@ import eighteenYearsAgo,{validateFile, phoneRegExp} from './utilities';
 
 export const registrationValidationSchema = Yup.object({
     image: Yup.mixed()
-        .test("fileSize", "The file is too large", (value) => validateFile(value, 5))  // Assuming a max size of 5MB
-        .test("fileType", "Unsupported file format", (value) => validateFile(value, 5)),
+        .test("fileSize", "The file is too large", (value) => validateFile(value, 1))  // Assuming a max size of 5MB
+        .test("fileType", "Unsupported file format", (value) => validateFile(value, 1)),
     firstName: Yup.string()
         .required('First Name is required')
         .min(2, 'First Name must be at least 2 characters long'),
