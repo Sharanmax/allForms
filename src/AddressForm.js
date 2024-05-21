@@ -2,45 +2,15 @@ import React from 'react';
 import { Formik, Form } from 'formik';
 import { Box, Button } from '@mui/material';
 import MaterialUIFieldAdapter from './MaterialUIFieldAdapter';
-import * as Yup from 'yup';
 import PropTypes from 'prop-types';
-
-const validationSchema = Yup.object({
-    useMap: Yup.boolean(),
-    pincode: Yup.string()
-        .required('Pincode is required')
-        .matches(/^\d{6}$/, 'Pincode must be exactly 6 digits'), // Adjust regex according to your country's postal code standards
-    city: Yup.string()
-        .required('City is required'),
-    state: Yup.string()
-        .required('State is required'),
-    houseNumber: Yup.string()
-        .required('House number is required')
-        .max(50, 'House number must not exceed 50 characters'),
-    area: Yup.string()
-        .max(100, 'Area description must not exceed 100 characters') // Optional field but with a length validation
-});
+import { nextBtnText, renderBackButton } from './utilities';
 
 
-const AddressForm = ({nextStep, goBack}) => {
+
+
+const AddressForm = ({ onBack, isLastStep, type, step, ...formikProps }) => {
     return (
-        <Formik
-            initialValues={{
-                useMap: false,
-                pincode: '',
-                city: '',
-                state: '',
-                houseNumber: '',
-                area: ''
-            }}
-            onSubmit={(values) => {
-                console.log(values);
-                nextStep()
-            }}
-            validationSchema={validationSchema}
-        >
-            {formik => (
-                <Form>
+                <Form {...formikProps}>
                     <Box sx={{
                         maxWidth: '608px',
                         m: 'auto',
@@ -52,21 +22,21 @@ const AddressForm = ({nextStep, goBack}) => {
                         bgcolor: 'background.paper',
                     }}>
                         <MaterialUIFieldAdapter
-                            formik={formik}
+                            {...formikProps}
                             type="checkbox"
                             name="useMap"
                             label="Use Map"
                         />
 
                         <MaterialUIFieldAdapter
-                            formik={formik}
+                            {...formikProps}
                             type="text"
                             name="pincode"
                             label="Pincode"
                         />
 
                         <MaterialUIFieldAdapter
-                            formik={formik}
+                            {...formikProps}
                             type="select"
                             name="city"
                             label="City"
@@ -74,7 +44,7 @@ const AddressForm = ({nextStep, goBack}) => {
                         />
 
                         <MaterialUIFieldAdapter
-                            formik={formik}
+                            {...formikProps}
                             type="select"
                             name="state"
                             label="State"
@@ -82,14 +52,14 @@ const AddressForm = ({nextStep, goBack}) => {
                         />
 
                         <MaterialUIFieldAdapter
-                            formik={formik}
+                            {...formikProps}
                             type="textarea"
                             name="houseNumber"
                             label="House / Flat / Block No."
                         />
 
                         <MaterialUIFieldAdapter
-                            formik={formik}
+                            {...formikProps}
                             type="textarea"
                             name="area"
                             label="Road / Area (Optional)"
@@ -97,22 +67,21 @@ const AddressForm = ({nextStep, goBack}) => {
 
                         <Box display="flex" justifyContent="space-between" width="100%" fullWidth>
                             <Button type="submit" color="primary" variant="contained" sx={{ width: window.innerWidth >= 600 ? '444px' : "100%" }}>
-                                Next
+                               {nextBtnText(isLastStep)}
                             </Button>
-                            {window.innerWidth >= 600 ? <Button type="button" color="secondary" variant="contained" sx={{ width: '94px' }} onClick={goBack}>
-                                Back
-                            </Button> : <></>}
+                            {renderBackButton(onBack, step)}
                         </Box>
                     </Box>
                 </Form>
-            )}
-        </Formik>
-    );
+            )
 }
 
 AddressForm.propTypes = {
-    nextStep: PropTypes.func,
-    goBack: PropTypes.func
+    formikProps: PropTypes.object,
+    onBack: PropTypes.func.isRequired,
+    type: PropTypes.string,
+    isLastStep: PropTypes.bool.isRequired,
+    step: PropTypes.number
 }
 
 export default AddressForm;

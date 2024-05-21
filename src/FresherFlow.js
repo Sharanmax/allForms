@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { Box } from '@mui/material';
+import React from 'react';
 import RegistrationForm from './RegistrationForm';
 import EducationForm from './EducationForm';
 import MultiStepForm from './StepFormContainer';

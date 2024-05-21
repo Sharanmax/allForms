@@ -1,42 +1,16 @@
 import React from 'react';
-import { Formik, Form } from 'formik';
-import { Box, Button } from '@mui/material';
+import {  Form } from 'formik';
+import { Box, Button, formControlLabelClasses } from '@mui/material';
 import MaterialUIFieldAdapter from './MaterialUIFieldAdapter'; 
-import * as Yup from 'yup'; 
 import PropTypes from 'prop-types';
+import { nextBtnText, renderBackButton } from './utilities';
 
-// Initial values for the form fields
-const initialValues = {
-    brandName: '',
-    currentCity: '',
-    monthlySalary: '',
-};
 
-const formValidationSchema = Yup.object({
-    brandName: Yup.string()
-        .required('Brand Name is required')
-        .min(2, 'Brand Name must be at least 2 characters long')
-        .max(50, 'Brand Name cannot be longer than 50 characters'),
-    currentCity: Yup.string()
-        .required('Current working city is required')
-        .oneOf(['newYork', 'losAngeles'], 'Invalid city selected'),
-    monthlySalary: Yup.string()
-        .required('Monthly Salary is required')
-        .oneOf(['1000', '2000'], 'Invalid salary selected'),
-});
 
-const StatusForm = ({nextStep, goBack}) => {
+
+const StatusForm = ({ onBack, isLastStep, type, step, ...formikProps }) => {
     return (
-        <Formik
-            initialValues={initialValues}
-            validationSchema={formValidationSchema}
-            onSubmit={(values) => {
-                console.log('Form Data:', values);
-                nextStep();
-            }}
-        >
-            {formik => (
-                <Form>
+                <Form {...formikProps}>
                     <Box sx={{
                         maxWidth: '608px',
                         m: 'auto',
@@ -48,14 +22,14 @@ const StatusForm = ({nextStep, goBack}) => {
                         bgcolor: 'background.paper',
                     }}>
                         <MaterialUIFieldAdapter
-                            formik={formik}
+                            {...formikProps}
                             name="brandName"
                             type="text"
                             label="Brand Name"
                             placeholder="Type"
                         />
                         <MaterialUIFieldAdapter
-                            formik={formik}
+                            {...formikProps}
                             name="currentCity"
                             type="select"
                             label="Current working city"
@@ -65,7 +39,7 @@ const StatusForm = ({nextStep, goBack}) => {
                             ]}
                         />
                         <MaterialUIFieldAdapter
-                            formik={formik}
+                            {...formikProps}
                             name="monthlySalary"
                             type="select"
                             label="Monthly Salary"
@@ -76,22 +50,21 @@ const StatusForm = ({nextStep, goBack}) => {
                         />
                         <Box display="flex" justifyContent="space-between" width="100%" fullWidth>
                             <Button type="submit" color="primary" variant="contained" sx={{ width: window.innerWidth >= 600 ? '444px' : "100%" }}>
-                                Next
+                                {nextBtnText(isLastStep)}
                             </Button>
-                            {window.innerWidth >= 600 ? <Button type="button" color="secondary" variant="contained" sx={{ width: '94px' }} onClick={goBack}>
-                                Back
-                            </Button> : <></>}
+                            {renderBackButton(onBack, step)}
                         </Box>
                     </Box>
                 </Form>
-            )}
-        </Formik>
-    );
+            )
 };
 
 StatusForm.propTypes = {
-    nextStep: PropTypes.func,
-    goBack: PropTypes.func
+    onBack: PropTypes.func,
+    isLastStep: PropTypes.bool,
+    step: PropTypes.number,
+    formikProps: PropTypes.object,
+    type: PropTypes.string
 }
 
 export default StatusForm;

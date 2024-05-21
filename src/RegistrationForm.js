@@ -5,13 +5,13 @@ import { Button, Box } from '@mui/material';
 import PropTypes from 'prop-types';
 import { nextBtnText, renderBackButton } from './utilities';
 
-const RegistrationForm = ({ onNext, onBack, isLastStep, type, step, ...formikProps }) => {
+const RegistrationForm = ({ onBack, isLastStep, type, step, ...formikProps }) => {
 
     return (
         <Form onSubmit={formikProps.handleSubmit}>
             <Box display="flex" flexDirection="column" alignSelf={'center'} justify={'center'} sx={{ px: '35px', py: '30px', width: '608px', m: 'auto', mt: '32px', boxShadow: '0px 4px 25px 0px rgba(0, 0, 0, 0.05)' }}>
                 <MaterialUIFieldAdapter
-                    formik={formikProps}
+                    {...formikProps}
                     type="file"
                     name="image"
                     label="Upload Image"
@@ -19,7 +19,7 @@ const RegistrationForm = ({ onNext, onBack, isLastStep, type, step, ...formikPro
                 <Box fullWidth sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
                     <Box sx={{ width: '49%' }}>
                         <MaterialUIFieldAdapter
-                            formik={formikProps}
+                            {...formikProps}
                             type="text"
                             name="firstName"
                             label="First Name"
@@ -28,7 +28,7 @@ const RegistrationForm = ({ onNext, onBack, isLastStep, type, step, ...formikPro
                     </Box>
                     <Box sx={{ width: '49%' }}>
                         <MaterialUIFieldAdapter
-                            formik={formikProps}
+                            {...formikProps}
                             type="text"
                             name="lastName"
                             label="Last Name"
@@ -38,7 +38,7 @@ const RegistrationForm = ({ onNext, onBack, isLastStep, type, step, ...formikPro
                 </Box>
                 <Box>
                     <MaterialUIFieldAdapter
-                        formik={formikProps}
+                        {...formikProps}
                         type="email"
                         name="email"
                         label="Email"
@@ -47,7 +47,7 @@ const RegistrationForm = ({ onNext, onBack, isLastStep, type, step, ...formikPro
                 </Box>
                 <Box>
                     <MaterialUIFieldAdapter
-                        formik={formikProps}
+                        {...formikProps}
                         type="radio"
                         name="gender"
                         label="Gender"
@@ -56,7 +56,7 @@ const RegistrationForm = ({ onNext, onBack, isLastStep, type, step, ...formikPro
                 </Box>
                 <Box>
                     <MaterialUIFieldAdapter
-                        formik={formikProps}
+                        {...formikProps}
                         type='date'
                         name='dateOfBirth'
                         label='Date of Birth'
@@ -66,7 +66,7 @@ const RegistrationForm = ({ onNext, onBack, isLastStep, type, step, ...formikPro
                 {type === 'fresher' && (
                     <Box>
                         <MaterialUIFieldAdapter
-                            formik={formikProps}
+                            {...formikProps}
                             type="select"
                             options={[{ value: 'New York', label: 'New York' }, { value: 'Los Angeles', label: 'Los Angeles' }]}
                             name="currentCity"
@@ -76,7 +76,7 @@ const RegistrationForm = ({ onNext, onBack, isLastStep, type, step, ...formikPro
                     </Box>
                 )}
                 <Box display="flex" justifyContent="space-between" width="100%">
-                    <Button type="submit" color="primary" variant="contained" sx={{ width: window.innerWidth >= 600 ? 444 : "100%" }} onClick={onNext} >
+                    <Button type="submit" color="primary" variant="contained" sx={{ width: window.innerWidth >= 600 ? 444 : "100%" }} >
                         {nextBtnText(isLastStep)}
                     </Button>
                     {renderBackButton({ onBack, step })}
@@ -88,7 +88,6 @@ const RegistrationForm = ({ onNext, onBack, isLastStep, type, step, ...formikPro
 
 RegistrationForm.propTypes = {
     type: PropTypes.string,
-    onNext: PropTypes.func,
     onBack: PropTypes.func,
     isLastStep: PropTypes.bool,
     step: PropTypes.number.isRequired

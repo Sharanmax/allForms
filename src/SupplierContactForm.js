@@ -2,45 +2,12 @@ import React from 'react';
 import { Formik, Form } from 'formik';
 import MaterialUIFieldAdapter from './MaterialUIFieldAdapter';
 import { Box, Button } from '@mui/material';
-import * as Yup from 'yup';
 import PropTypes from 'prop-types';
+import { nextBtnText, renderBackButton } from './utilities';
 
-const phoneRegExp = /^(\+\d{1,3}[- ]?)?\d{10}$/;
+const ContactForm = ({ onBack, isLastStep, type, step, ...formikProps }) => {
 
-const ContactForm = ({ goBack }) => {
-    const initialValues = {
-        areaOfCoverage: '',
-        scaleOfSupply: '',
-        personName: '',
-        contactNumber: '',
-        email: '',
-        website: '',
-    };
-
-    const validationSchema = Yup.object({
-        areaOfCoverage: Yup.string()
-            .required('Selecting an area of coverage is required'),
-
-        scaleOfSupply: Yup.string()
-            .required('Selecting a scale of supply is required'),
-
-        personName: Yup.string()
-            .required('Contact Person Name is required')
-            .min(2, 'Name must be at least 2 characters long')
-            .max(50, 'Name can be no longer than 50 characters'),
-
-        contactNumber: Yup.string()
-            .required('Contact Number is required')
-            .matches(phoneRegExp, 'Invalid phone number'),
-
-        email: Yup.string()
-            .email('Invalid email address')
-            .required('Email is required'),
-
-        website: Yup.string()
-            .url('Enter a valid URL')
-            .notRequired() // Makes it optional
-    });
+    
 
     const renderSelect = (typeOfCoverage) => {
             if(typeOfCoverage === 'state' || typeOfCoverage === 'city'){
@@ -51,6 +18,7 @@ const ContactForm = ({ goBack }) => {
                         name="currentCity"
                         label="Current City"
                         placeholder="Select"
+                        {...formikProps}
                     />
                 )
             }else if(typeOfCoverage === 'inter_state' || typeOfCoverage === "inter_city"){
@@ -58,24 +26,18 @@ const ContactForm = ({ goBack }) => {
                     name="cityOrState"
                     type="multiselect"
                     label=""
+                    {...formikProps}
                     options={[{ value: 'tech', label: 'Tech' }, { value: 'retail', label: 'Retail' }]}
                 />)
             }else return <></>
     }
 
-
-    const onSubmit = (values) => {
-        alert(`check details ${JSON.stringify(values)}`);
-    };
-
     return (
-        <Formik initialValues={initialValues} onSubmit={onSubmit} validationSchema={validationSchema}>
-            {formik => (
-                <Form>
+                <Form {...formikProps}>
                     <Box sx={{ px: '35px', py: '30px', width: '608px', m: 'auto', mt: '32px', boxShadow: '0px 4px 25px 0px rgba(0, 0, 0, 0.05)' }}>
                         
                         <MaterialUIFieldAdapter
-                            formik={formik}
+                            {...formikProps}
                             type="radio"
                             name="areaOfCoverage"
                             label="Area of Coverage"
@@ -88,9 +50,9 @@ const ContactForm = ({ goBack }) => {
                                 { label: "Inter-City", value: "inter_city" }
                             ]}
                         />
-                        {renderSelect(formik.values.areaOfCoverage)}
+                        {renderSelect(formikProps.values.areaOfCoverage)}
                         <MaterialUIFieldAdapter
-                            formik={formik}
+                            {...formikProps}
                             type="radio"
                             name="scaleOfSupply"
                             label="Scale of Supply"
@@ -101,28 +63,28 @@ const ContactForm = ({ goBack }) => {
                             rowRadio
                         />
                         <MaterialUIFieldAdapter
-                            formik={formik}
+                            {...formikProps}
                             name="personName"
                             type="text"
                             label="Contact Person Name"
                             placeholder="Type"
                         />
                         <MaterialUIFieldAdapter
-                            formik={formik}
+                            {...formikProps}
                             name="contactNumber"
                             type="text"
                             label="Contact Number"
                             placeholder="Type"
                         />
                         <MaterialUIFieldAdapter
-                            formik={formik}
+                            {...formikProps}
                             name="email"
                             type="email"
                             label="Email"
                             placeholder="Type"
                         />
                         <MaterialUIFieldAdapter
-                            formik={formik}
+                            {...formikProps}
                             name="website"
                             type="text"
                             label="Website(Optional)"
@@ -130,21 +92,21 @@ const ContactForm = ({ goBack }) => {
                         />
                         <Box display="flex" justifyContent="space-between" width="100%" fullWidth>
                             <Button type="submit" color="primary" variant="contained" sx={{ width: window.innerWidth >= 600 ? '444px' : "100%" }}>
-                                Next
+                               {nextBtnText(isLastStep)}
                             </Button>
-                            {window.innerWidth >= 600 ? <Button type="button" color="secondary" variant="contained" sx={{ width: '94px' }} onClick={goBack}>
-                                Back
-                            </Button> : <></>}
+                            {renderBackButton(onBack, step)}
                         </Box>
                     </Box>
                 </Form>
-            )}
-        </Formik>
-    );
+            )
 };
 
 ContactForm.propTypes = {
-    goBack: PropTypes.func
+    formikProps: PropTypes.object,
+    onBack: PropTypes.func.isRequired,
+    type: PropTypes.string,
+    isLastStep: PropTypes.bool.isRequired,
+    step: PropTypes.number
 }
 
 export default ContactForm;

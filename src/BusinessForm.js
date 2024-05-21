@@ -5,54 +5,12 @@ import MaterialUIFieldAdapter from './MaterialUIFieldAdapter';  // Adjust import
 import * as Yup from 'yup';
 import PropTypes from 'prop-types';
 import { Persist } from 'formik-persist';
+import { nextBtnText, renderBackButton } from './utilities';
 
-// Initial values for Formik
-const initialValues = {
-    companyLogo: '',
-    brandName: '',
-    companyName: '',
-    gender: '',
-    natureOfBusiness: '',
-    numberOfEmployees: ''
-};
 
-const validationSchema = Yup.object({
-    companyLogo: Yup.mixed()
-        .nullable()
-        .notRequired(), // Assuming this is a file upload field, and files are handled differently
-
-    brandName: Yup.string()
-        .required('Brand Name is required')
-        .min(2, 'Brand Name must be at least 2 characters')
-        .max(100, 'Brand Name must not exceed 100 characters'),
-
-    companyName: Yup.string()
-        .required('Company Name is required')
-        .min(2, 'Company Name must be at least 2 characters')
-        .max(100, 'Company Name must not exceed 100 characters'),
-
-    gender: Yup.string()
-        .required('Please select a gender'),
-
-    natureOfBusiness: Yup.array()
-        .min(1, 'Please select at least one option')
-        .required('This field is required'),
-
-    numberOfEmployees: Yup.string()
-        .required('Please select the number of employees')
-        .oneOf(['1-10', '11-50'], 'Invalid number of employees selection')
-});
-
-const onSubmit = (values) => {
-    console.log(values);
-
-};
-
-const BusinessForm = ({nextStep}) => {
+const BusinessForm = ({ onBack, isLastStep, type, step, ...formikProps }) => {
     return (
-        <Formik initialValues={initialValues} onSubmit={(values) =>{ onSubmit(values); nextStep();}} validationSchema={validationSchema}>
-            {formik => (
-                <Form>
+                <Form {...formikProps}>
                     <Box sx={{
                         maxWidth: '608px',
                         m: 'auto',
@@ -67,38 +25,38 @@ const BusinessForm = ({nextStep}) => {
                             type="file"
                             name="companyLogo"
                             label="Upload Company Logo"
-                            formik={formik}
+                            {...formikProps}
                         />
                         <MaterialUIFieldAdapter
-                            formik={formik}
+                            {...formikProps}
                             name="brandName"
                             type="text"
                             label="Brand Name"
                             placeholder="Type"
                         />
                         <MaterialUIFieldAdapter
-                            formik={formik}
+                            {...formikProps}
                             name="companyName"
                             type="text"
                             label="Company Name"
                             placeholder="Type"
                         />
                         <MaterialUIFieldAdapter
-                            formik={formik}
+                            {...formikProps}
                             name="gender"
                             type="radio"
                             label="Gender"
                             options={[{ value: 'male', label: 'Male' }, { value: 'female', label: 'Female' }, { value: 'others', label: 'Others' }]}
                         />
                         <MaterialUIFieldAdapter
-                            formik={formik}
+                            {...formikProps}
                             name="natureOfBusiness"
                             type="multiselect"
                             label="Nature of Business"
                             options={[{ value: 'tech', label: 'Tech' }, { value: 'retail', label: 'Retail' }]}
                         />
                         <MaterialUIFieldAdapter
-                            formik={formik}
+                            {...formikProps}
                             name="numberOfEmployees"
                             type="select"
                             label="No. of Employees"
@@ -106,23 +64,23 @@ const BusinessForm = ({nextStep}) => {
                         />
                         <Box display="flex" justifyContent="space-between" width="100%" fullWidth>
                             <Button type="submit" color="primary" variant="contained" sx={{ width: window.innerWidth >= 600 ? '444px' : "100%" }}>
-                                Next
+                               {nextBtnText(isLastStep)}
                             </Button>
-                            {window.innerWidth >= 600 ? <Button type="button" color="secondary" variant="contained" sx={{ width: '94px' }}>
-                                Back
-                            </Button> : <></>}
+                            {renderBackButton(onBack, step)}
                         </Box>
                         
                     </Box>
                     {/* <Persist name="business-form" /> */}
                 </Form>
-            )}
-        </Formik>
-    );
+            )
 };
 
 BusinessForm.propTypes = {
-    nextStep: PropTypes.func
+    formikProps: PropTypes.object,
+    onBack: PropTypes.func.isRequired,
+    type: PropTypes.string,
+    isLastStep: PropTypes.bool.isRequired,
+    step: PropTypes.number
 }
 
 export default BusinessForm;

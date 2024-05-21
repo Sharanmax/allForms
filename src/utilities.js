@@ -11,12 +11,14 @@ export const validateFile = (file, maxSize) => {
     return file.size <= sizeInBytes && ['image/jpeg', 'image/png', 'image/gif'].includes(file.type);
 };
 
+export const phoneRegExp = /^(\+\d{1,3}[- ]?)?\d{10}$/;
+
 export const nextBtnText = (isLast) => {
     if(isLast) return 'Confirm'
     else return 'Next'
 }
 
-export const renderBackButton = ({ onBack, step }) => {
+export const renderBackButton = ( onBack, step ) => {
     if (window.innerWidth >= 600 && step > 0){
         return (
             <Button type="button" color="secondary" variant="contained" sx={{ width: 94 }} onClick={onBack}>

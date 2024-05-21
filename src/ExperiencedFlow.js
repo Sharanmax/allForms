@@ -1,39 +1,55 @@
 import React, { useState } from 'react';
-import { Box } from '@mui/material';
+import MultiStepForm from './StepFormContainer';
 import RegistrationForm from './RegistrationForm';
 import StatusForm from './StatusForm';
 import WorkExperienceForm from './ExperienceForm';
 
+import { statusValidationSchema, workExperienceValidationSchema, registrationValidationSchema } from './validationSchemas';
+
+const formConfigs = [
+    {
+        Component: RegistrationForm,
+        initialValues: {
+            image: '',
+            firstName: '',
+            lastName: '',
+            email: '',
+            gender: '',
+            dateOfBirth: '',
+            currentCity: '',
+        },
+        validationSchema: registrationValidationSchema,
+        key: 'registration',
+        type: 'fresher' // Example specific prop for RegistrationForm,       
+    },
+    {
+        Component: StatusForm,
+        initialValues: {
+            brandName: '',
+            currentCity: '',
+            monthlySalary: '',
+        },
+        validationSchema: statusValidationSchema,
+        key: 'status'
+    },
+    {
+        Component: WorkExperienceForm,
+        initialValues: {
+            workExperience: '',
+            department: '',
+            position: ''
+        },
+        validationSchema: workExperienceValidationSchema,
+        key: 'workExperience' 
+    }
+];
+
 // Initial values for Formik
 const ExperiencedForm = () => {
-    const [step, setStep] = useState(0);
-
-    const incrementStep = () => {
-        setStep(prevStep => prevStep + 1);
-    };
-
-    // Function to decrement the step
-    const decrementStep = () => {
-        setStep(prevStep => prevStep - 1);
-    };
-
-    const renderStep = (currentStep) => {
-        switch (currentStep) {
-            case 0:
-                return <RegistrationForm callBack={incrementStep} />;
-            case 1:
-                return <StatusForm goBack={decrementStep} nextStep={incrementStep} />;
-            case 2:
-                return <WorkExperienceForm goBack={decrementStep} nextStep={incrementStep} />;
-            default:
-                return <RegistrationForm callBack={incrementStep} />;
-        }
-    };
+    
 
     return (
-        <Box sx={{ flex: 1 }}>
-            {renderStep(step)}
-        </Box>
+        <MultiStepForm formConfigs={formConfigs} onSubmitFinal={(values) => alert(`end of fresher flow ${JSON.stringify(values)}`)} />
     );
 };
 

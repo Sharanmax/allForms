@@ -3,37 +3,56 @@ import { Box } from '@mui/material';
 import BusinessForm from './BusinessForm'
 import AddressForm from './AddressForm';
 import ContactForm from './ContactForm';
-// Initial values for Formik
+import MultiStepForm from './StepFormContainer';
+import { businessValidationSchema, addressValidationSchema, contactValidationSchema  } from './validationSchemas';
 
+// Initial values for Formik
+const formConfigs = [
+    {
+        Component: BusinessForm,
+        initialValues: {
+            companyLogo: '',
+            brandName: '',
+            companyName: '',
+            gender: '',
+            natureOfBusiness: '',
+            numberOfEmployees: ''
+        },
+        validationSchema: businessValidationSchema,
+        key: 'business',   
+    },
+    {
+        Component: AddressForm,
+        initialValues: {
+            useMap: false,
+            pincode: '',
+            city: '',
+            state: '',
+            houseNumber: '',
+            area: ''
+        },
+        validationSchema: addressValidationSchema,
+        key: 'address'
+    },
+    {
+        Component: ContactForm,
+        initialValues: {
+            personName: '',
+            contactNumber: '',
+            email: '',
+            website: '',
+        },
+        validationSchema: contactValidationSchema,
+        key: 'contact'
+    }
+];
 
 const RecruiterForm = () => {
-    const [step, setStep] = useState(0);
-
-    const incrementStep = () => {
-        setStep(prevStep => prevStep + 1);
-    };
-
-    // Function to decrement the step
-    const decrementStep = () => {
-        setStep(prevStep => prevStep - 1);
-    };
-
-    const renderStep = (currentStep) => {
-        switch (currentStep) {
-            case 0:
-                return <BusinessForm nextStep={incrementStep} />;
-            case 1:
-                return <AddressForm goBack={decrementStep} nextStep={incrementStep} />;
-            case 2:
-                return <ContactForm goBack={decrementStep} nextStep={incrementStep} />;
-            default:
-                return <BusinessForm nextStep={incrementStep} />;
-        }
-    };
+   
 
     return (
         <Box sx={{ flex: 1 }}>
-            {renderStep(step)}
+            <MultiStepForm formConfigs={formConfigs} onSubmitFinal={(values) => alert(`end of fresher flow ${JSON.stringify(values)}`)} />
         </Box>
     );
 };

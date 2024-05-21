@@ -3,14 +3,13 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import RecruiterForm from './HirerFlow';
-import OtpForm from './OtpForm';
-import FresherForm from './FresherFlow';
+import SupplierForm from './SupplierFlow';
+import ExperiencedForm from './ExperiencedFlow';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <FresherForm />
+    <SupplierForm />
   </React.StrictMode>
 );
 

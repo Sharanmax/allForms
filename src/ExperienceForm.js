@@ -1,23 +1,9 @@
 import React from 'react';
-import { Formik, Form } from 'formik';
-import * as Yup from 'yup';
+import { Form } from 'formik';
 import { Box, Button } from '@mui/material';
 import MaterialUIFieldAdapter from './MaterialUIFieldAdapter';
 import PropTypes from 'prop-types';
-
-// Initial values for Formik
-const initialValues = {
-    workExperience: '',
-    department: '',
-    position: ''
-};
-
-// Validation Schema using Yup
-const validationSchema = Yup.object({
-    workExperience: Yup.string().required('Work experience is required'),
-    department: Yup.string().required('Department is required'),
-    position: Yup.string().required('Position is required')
-});
+import { nextBtnText, renderBackButton } from './utilities';
 
 // Example data for selects (should be fetched or defined elsewhere in real scenarios)
 const experienceOptions = [
@@ -38,11 +24,9 @@ const positionOptions = [
     { value: 'hrConsultant', label: 'HR Consultant' }
 ];
 
-const WorkExperienceForm = ({nextStep, goBack}) => {
+const WorkExperienceForm = ({ onBack, isLastStep, type, step, ...formikProps }) => {
     return (
-        <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={(values) => console.log(values)}>
-            {formik => (
-                <Form>
+                <Form {...formikProps}>
                     <Box sx={{
                         maxWidth: '608px',
                         m: 'auto',
@@ -54,7 +38,7 @@ const WorkExperienceForm = ({nextStep, goBack}) => {
                     }}>
                         <Box>
                             <MaterialUIFieldAdapter
-                                formik={formik}
+                                {...formikProps}
                                 type="select"
                                 name="workExperience"
                                 label="Work Experience"
@@ -62,14 +46,14 @@ const WorkExperienceForm = ({nextStep, goBack}) => {
                             />
                         </Box>
                         <MaterialUIFieldAdapter
-                            formik={formik}
+                            {...formikProps}
                             type="select"
                             name="department"
                             label="Department"
                             options={departmentOptions}
                         />
                         <MaterialUIFieldAdapter
-                            formik={formik}
+                            {...formikProps}
                             type="select"
                             name="position"
                             label="Position"
@@ -77,22 +61,20 @@ const WorkExperienceForm = ({nextStep, goBack}) => {
                         />
                         <Box display="flex" justifyContent="space-between" width="100%" fullWidth>
                             <Button type="submit" color="primary" variant="contained" sx={{ width: window.innerWidth >= 600 ? '444px' : "100%" }}>
-                                Next
+                               {nextBtnText(isLastStep)}
                             </Button>
-                            {window.innerWidth >= 600 ? <Button type="button" color="secondary" variant="contained" sx={{ width: '94px' }} onClick={goBack}>
-                                Back
-                            </Button> : <></>}
+                            {renderBackButton(onBack, step)}
                         </Box>
                     </Box>
                 </Form>
-            )}
-        </Formik>
     );
 };
 
 WorkExperienceForm.propTypes = {
-    nextStep: PropTypes.func,
-    goBack: PropTypes.func
+    onBack: PropTypes.func,
+    step: PropTypes.number,
+    isLastStep: PropTypes.bool,
+    formikProps: PropTypes.object
 }
 
 export default WorkExperienceForm;
